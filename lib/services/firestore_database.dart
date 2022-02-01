@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firestore_service/firestore_service.dart';
 import 'package:starter_architecture_flutter_firebase/app/home/models/entry.dart';
 import 'package:starter_architecture_flutter_firebase/app/home/models/job.dart';
+import 'package:starter_architecture_flutter_firebase/app/home/models/projet.dart';
 import 'package:starter_architecture_flutter_firebase/services/firestore_path.dart';
 
 String documentIdFromCurrentDate() => DateTime.now().toIso8601String();
@@ -57,4 +58,34 @@ class FirestoreDatabase {
         builder: (data, documentID) => Entry.fromMap(data, documentID),
         sort: (lhs, rhs) => rhs.start.compareTo(lhs.start),
       );
+
+  //Projet
+  Stream<List<projet>> projetStream() => _service.collectionStream(
+        path: FirestorePath.projets(uid),
+        builder: (data, documentId) => projet.fromMap(data, documentId),
+      );
+
+  Stream<List<Entry>> entriesStreamP({projet? job}) =>
+      _service.collectionStream<Entry>(
+        path: FirestorePath.entries(uid),
+        queryBuilder: job != null
+            ? (query) => query.where('jobId', isEqualTo: job.id)
+            : null,
+        builder: (data, documentID) => Entry.fromMap(data, documentID),
+        sort: (lhs, rhs) => rhs.start.compareTo(lhs.start),
+      );
+
+
+      Future<void> deleteProjet(projet job) async {
+    // delete where entry.jobId == job.jobId
+    final allEntries = await entriesStreamP(job: job).first;
+    for (final entry in allEntries) {
+      if (entry.jobId == job.id) {
+        await deleteEntry(entry);
+      }
+    }
+    // delete job
+    await _service.deleteData(path: FirestorePath.job(uid, job.id));
+  }
+
 }

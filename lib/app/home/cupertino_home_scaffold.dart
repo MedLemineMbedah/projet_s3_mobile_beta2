@@ -29,6 +29,7 @@ class CupertinoHomeScaffold extends StatelessWidget {
           _buildItem(TabItem.jobs),
           _buildItem(TabItem.entries),
           _buildItem(TabItem.account),
+          _buildItem(TabItem.jobs),
         ],
         onTap: (index) => onSelectTab(TabItem.values[index]),
         activeColor: Colors.indigo,

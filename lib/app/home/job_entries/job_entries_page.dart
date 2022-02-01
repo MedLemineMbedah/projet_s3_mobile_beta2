@@ -12,6 +12,7 @@ import 'package:starter_architecture_flutter_firebase/app/home/jobs/edit_job_pag
 import 'package:starter_architecture_flutter_firebase/app/home/jobs/list_items_builder.dart';
 import 'package:starter_architecture_flutter_firebase/app/home/models/entry.dart';
 import 'package:starter_architecture_flutter_firebase/app/home/models/job.dart';
+import 'package:starter_architecture_flutter_firebase/app/home/models/projet.dart';
 import 'package:starter_architecture_flutter_firebase/app/top_level_providers.dart';
 import 'package:starter_architecture_flutter_firebase/routing/cupertino_tab_view_router.dart';
 
@@ -19,6 +20,14 @@ class JobEntriesPage extends StatelessWidget {
   const JobEntriesPage({required this.job});
   final Job job;
 
+
+  //projet
+   static Future<void> showP(BuildContext context, projet job) async {
+    await Navigator.of(context).pushNamed(
+      CupertinoTabViewRoutes.jobEntriesPage,
+      arguments: job,
+    );
+  }
   static Future<void> show(BuildContext context, Job job) async {
     await Navigator.of(context).pushNamed(
       CupertinoTabViewRoutes.jobEntriesPage,
